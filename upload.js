@@ -7,24 +7,23 @@ exports.post = function (req, res) {
         return res.status(400).send('No files were uploaded.');
      
     var authorFile = req.files.file;
- console.log(authorFile);
     var authors = [];
-         
+    
     csv
-     .parseString(authorFile.data.toString(), {
-         headers: true,
-         ignoreEmpty: true
-     })
-     .on("data", function(data){
-         data['_id'] = new mongoose.Types.ObjectId();
-          
-         authors.push(data);
-     })
+    .parseString(authorFile.data.toString(), {
+        headers: true,
+        ignoreEmpty: true
+    })
+    .on("data", function(data){
+        data['_id'] = new mongoose.Types.ObjectId();
+        
+        authors.push(data);
+    })
      .on("end", function(){
          Author.create(authors, function(err, documents) {
             if (err) throw err;
          });
-          
+         
          res.send(authors.length + ' authors have been successfully uploaded.');
      });
 };
